@@ -586,7 +586,7 @@ export const Landing = () => {
 				{/*end::Entry*/}
 			</div>
 
-			<Modal
+			{/* <Modal
 				{...this.props}
 				size='lg'
 				aria-labelledby='contained-modal-title-vcenter'
@@ -608,7 +608,7 @@ export const Landing = () => {
 				<Modal.Footer>
 					<Button onClick={this.props.onHide}>Close</Button>
 				</Modal.Footer>
-			</Modal>
+			</Modal> */}
 		</>
 	)
 }
