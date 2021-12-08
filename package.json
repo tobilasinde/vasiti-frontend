@@ -4,7 +4,7 @@
 	"private": true,
 	"homepage": "/metronic/react/demo2",
 	"scripts": {
-		"start": "node app.js",
+		"start": "npm install && node app.js",
 		"dev": "react-scripts start -o",
 		"build": "react-scripts build",
 		"test": "react-scripts test",
