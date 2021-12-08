@@ -18,6 +18,8 @@ export const Landing = () => {
 	const [variety, setVariety] = useState(1)
 	const [loading, setLoading] = useState(false)
 	const [categories, setCategories] = useState([])
+	const [modalShow, setModalShow] = useState(false)
+	const [viewItem, setViewItem] = useState()
 	const [initialFilter, setInitialFilter] = useState({
 		filter: {},
 		sortOrder: 'asc', // asc||desc
@@ -32,7 +34,6 @@ export const Landing = () => {
 	const { entities } = currentState //you can add listLoading, totalCount
 	const dispatch = useDispatch()
 	useEffect(() => {
-		console.log('hi')
 		dispatch(fetchProducts(initialFilter))
 	}, [dispatch, initialFilter])
 	useEffect(() => {
@@ -517,6 +518,10 @@ export const Landing = () => {
 																					<button
 																						type='button'
 																						className='btn font-weight-bolder btn-sm btn-success mr-2'
+																						onClick={() => {
+																							setViewItem(e)
+																							setModalShow(true)
+																						}}
 																					>
 																						<i className='flaticon-eye icon-lg'></i>
 																					</button>
@@ -586,29 +591,175 @@ export const Landing = () => {
 				{/*end::Entry*/}
 			</div>
 
-			{/* <Modal
-				{...this.props}
-				size='lg'
-				aria-labelledby='contained-modal-title-vcenter'
-				centered
-			>
-				<Modal.Header closeButton>
-					<Modal.Title id='contained-modal-title-vcenter'>
-						Modal heading
-					</Modal.Title>
-				</Modal.Header>
-				<Modal.Body>
-					<h4>Centered Modal</h4>
-					<p>
-						Cras mattis consectetur purus sit amet fermentum. Cras justo odio,
-						dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta
-						ac consectetur ac, vestibulum at eros.
-					</p>
-				</Modal.Body>
-				<Modal.Footer>
-					<Button onClick={this.props.onHide}>Close</Button>
-				</Modal.Footer>
-			</Modal> */}
+			{viewItem && (
+				<Modal
+					show={modalShow}
+					onHide={() => setModalShow(false)}
+					size='xl'
+					aria-labelledby='contained-modal-title-vcenter'
+					centered
+				>
+					<Modal.Header closeButton>
+						<Modal.Title id='contained-modal-title-vcenter'>
+							{viewItem.product_name}
+						</Modal.Title>
+					</Modal.Header>
+					<Modal.Body>
+						<div className='container'>
+							{/*begin::Engage Widget 14*/}
+							<div className='card card-custom card-stretch gutter-b'>
+								<div className='card-body p-15 pb-20'>
+									<div className='row mb-17'>
+										<div className=''>
+											{/*begin::Image*/}
+											<div className='card card-custom card-stretch'>
+												<div
+													className='card-body p-0 rounded px-10 py-15 d-flex align-items-center justify-content-center'
+													style={{ backgroundColor: '#FFCC69' }}
+												>
+													<img
+														src='/media/products/21.png'
+														className='mw-100 w-200px'
+														style={{ transform: 'scale(1.6)' }}
+													/>
+												</div>
+											</div>
+											{/*end::Image*/}
+										</div>
+										<div className='col-xxl-7 pl-xxl-11'>
+											<h2
+												className='font-weight-bolder text-dark mb-7'
+												style={{ fontSize: '32px' }}
+											>
+												{viewItem.product_name}
+											</h2>
+											<div className='font-size-h2 mb-7 text-dark-50'>
+												From
+												<span className='text-info font-weight-boldest ml-2'>
+													NGN{' '}
+													{Math.min(
+														...viewItem.product_varieties.map((p) => {
+															return p.price
+														}),
+													).toFixed(2)}
+												</span>
+											</div>
+											<div className='line-height-xl'>
+												{viewItem.product_description}
+											</div>
+										</div>
+									</div>
+									<div className='row mb-6'>
+										{/*begin::Info*/}
+										<div className='col-6 col-md-4'>
+											<div className='mb-8 d-flex flex-column'>
+												<span className='text-dark font-weight-bold mb-4'>
+													Category
+												</span>
+												<span className='text-muted font-weight-bolder font-size-lg'>
+													{viewItem.product_category}
+												</span>
+											</div>
+										</div>
+										<div className='col-6 col-md-4'>
+											<div className='mb-8 d-flex flex-column'>
+												<span className='text-dark font-weight-bold mb-4'>
+													Color
+												</span>
+												<span className='text-muted font-weight-bolder font-size-lg'>
+													{viewItem.product_varieties.map((c, i) => (
+														<label
+															key={i}
+															className={`radio radio-accent radio-${c.color} mr-0`}
+														>
+															<input
+																type='radio'
+																// name={`product_varieties[${index}][color]`}
+																value={c}
+																onChange={formik.handleChange}
+															/>
+															<span></span>
+														</label>
+													))}
+												</span>
+											</div>
+										</div>
+										<div className='col-6 col-md-4'>
+											<div className='mb-8 d-flex flex-column'>
+												<span className='text-dark font-weight-bold mb-4'>
+													Sizes
+												</span>
+												<span className='text-muted font-weight-bolder font-size-lg'>
+													<div className='radio-list'>
+														{viewItem.product_varieties.map((c, i) => (
+															<label className='radio' key={i}>
+																<input type='radio' name='radios1' />
+																<span></span>
+																{c.size}
+															</label>
+														))}
+													</div>
+												</span>
+											</div>
+										</div>
+										<div className='col-6 col-md-4'>
+											<div className='mb-8 d-flex flex-column'>
+												<span className='text-dark font-weight-bold mb-4'>
+													In Stock
+												</span>
+												<span className='text-muted font-weight-bolder font-size-lg'>
+													{viewItem.product_varieties.reduce(
+														(a, b) => a + b.quantity,
+														0,
+													)}
+												</span>
+											</div>
+										</div>
+										<div className='col-6 col-md-4'>
+											<div className='mb-8 d-flex flex-column'>
+												<span className='text-dark font-weight-bold mb-4'>
+													Price
+												</span>
+												<span className='text-muted font-weight-bolder font-size-lg'>
+													{}
+												</span>
+											</div>
+										</div>
+									</div>
+									{/*begin::Buttons*/}
+									<div className='d-flex'>
+										<button
+											type='button'
+											className='btn btn-primary font-weight-bolder mr-6 px-6 font-size-sm'
+										>
+											<span className='svg-icon'>
+												{/*begin::Svg Icon | path:assets/media/svg/icons/Files/File-plus.svg*/}
+												{/*end::Svg Icon*/}
+											</span>
+											Add to Cart
+										</button>
+										<button
+											type='button'
+											className='btn btn-light-primary font-weight-bolder px-8 font-size-sm'
+										>
+											<span className='svg-icon'>
+												{/*begin::Svg Icon | path:assets/media/svg/icons/Files/File-done.svg*/}
+												{/*end::Svg Icon*/}
+											</span>
+											Checkout
+										</button>
+									</div>
+									{/*end::Buttons*/}
+								</div>
+							</div>
+							{/*end::Engage Widget 14*/}
+						</div>
+					</Modal.Body>
+					<Modal.Footer>
+						<Button onClick={() => setModalShow(false)}>Close</Button>
+					</Modal.Footer>
+				</Modal>
+			)}
 		</>
 	)
 }

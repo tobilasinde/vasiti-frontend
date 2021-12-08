@@ -6,7 +6,7 @@ import BasePage from './BasePage'
 export function Routes() {
 	return (
 		<Switch>
-			<Route path='/error' component={<>error</>} />
+			<Route path='/error' component={() => 'hi'} />
 
 			<Layout>
 				<BasePage />
